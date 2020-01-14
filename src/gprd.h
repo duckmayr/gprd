@@ -7,4 +7,8 @@ arma::mat covSEiso(const arma::vec& x, const double sigma, const double ell);
 arma::mat covSEiso(const arma::vec& x1, const arma::vec& x2,
                    const double sigma, const double ell);
 
+inline arma::vec ones_vec(arma::uword n) {
+    return arma::ones<arma::vec>(n);
+}
+
 #endif

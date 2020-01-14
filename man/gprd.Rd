@@ -41,13 +41,47 @@ characteristic length scale for the unobserved function}
 the width of the confidence interval for tau}
 }
 \value{
-A named vector of length three with elements
+A list of length five with class \code{gprd} and elements
     \describe{
-        \item{tau}{The treatment effect estimate}
-        \item{tau_low}{The lower bound of the confidence interval}
-        \item{tau_high}{The upper bound of the confidence interval}
+        \item{tau_mean}{The treatment effect estimate}
+        \item{tau_ci}{A named numeric ector of length two giving the
+                      requested confidence interval (the names are the
+                      confidence interval quantiles)}
+        \item{cutoff}{A numeric vector of length one giving the cutoff}
+        \item{f_l}{An object of class \code{gpr} with information on
+                   the posterior over the function to the left of the cutoff}
+        \item{f_r}{An object of class \code{gpr} with information on
+                   the posterior over the function to the right of the cutoff}
     }
+
+    An object of class \code{gpr} is a list of length eight with the following
+elements:
+
+\describe{
+    \item{predictive_mean}{The mean of the predictive distribution at test
+                           cases \code{test_input}; in this case, the cutoff}
+    \item{predictive_var}{The variance of the predictive distribution at test
+                          cases \code{test_input}; in this case, the cutoff}
+    \item{beta_bar}{The mean of the posterior of the linear mean coefficients}
+    \item{training_input}{The input variable obervations for training cases}
+    \item{training_outcomes}{The outcome observations for training cases}
+    \item{test_input}{The input variable observations predictions were
+                      provided for}
+    \item{prior_covariance}{The covariance function evaluated for the
+                            training inputs, with observation noise added}
+    \item{prior_cov_inverse}{The inverse of \code{prior_covariance};
+                             having this available is useful for generating
+                             other predictions}
+    \item{hyperparameters}{The hyperparameters used for the GP regression,
+                           provided in a list of length five, giving the
+                           beta prior covariance, beta prior mean,
+                           scale factor for the GP, length scale for the GP,
+                           and outcome observation noise.}
+}
 }
 \description{
 Gaussian Process Regression Discontinuity
+}
+\seealso{
+plot.gprd
 }

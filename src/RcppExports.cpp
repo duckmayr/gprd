@@ -6,9 +6,9 @@
 
 using namespace Rcpp;
 
-// predict
-arma::mat predict(const arma::vec& outcome, const arma::vec& training_cases, const arma::vec& test_cases, const arma::mat& B, const arma::vec& b, const double cov_sigma, const double cov_ell, const double obs_sigma);
-RcppExport SEXP _gprd_predict(SEXP outcomeSEXP, SEXP training_casesSEXP, SEXP test_casesSEXP, SEXP BSEXP, SEXP bSEXP, SEXP cov_sigmaSEXP, SEXP cov_ellSEXP, SEXP obs_sigmaSEXP) {
+// gprd
+Rcpp::List gprd(const arma::vec& outcome, const arma::vec& training_cases, const arma::vec& test_cases, const arma::mat& B, const arma::vec& b, const double cov_sigma, const double cov_ell, const double obs_sigma);
+RcppExport SEXP _gprd_gprd(SEXP outcomeSEXP, SEXP training_casesSEXP, SEXP test_casesSEXP, SEXP BSEXP, SEXP bSEXP, SEXP cov_sigmaSEXP, SEXP cov_ellSEXP, SEXP obs_sigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,13 +20,35 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double >::type cov_sigma(cov_sigmaSEXP);
     Rcpp::traits::input_parameter< const double >::type cov_ell(cov_ellSEXP);
     Rcpp::traits::input_parameter< const double >::type obs_sigma(obs_sigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(predict(outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma));
+    rcpp_result_gen = Rcpp::wrap(gprd(outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// predict
+Rcpp::List predict(const arma::vec& outcome, const arma::mat& training_cases, const arma::vec& test_cases, const arma::mat& B, const arma::vec& b, const double cov_sigma, const double cov_ell, const double obs_sigma, const arma::mat& Ky, const arma::mat& Ky_i, const arma::vec& beta_bar);
+RcppExport SEXP _gprd_predict(SEXP outcomeSEXP, SEXP training_casesSEXP, SEXP test_casesSEXP, SEXP BSEXP, SEXP bSEXP, SEXP cov_sigmaSEXP, SEXP cov_ellSEXP, SEXP obs_sigmaSEXP, SEXP KySEXP, SEXP Ky_iSEXP, SEXP beta_barSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type outcome(outcomeSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type training_cases(training_casesSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type test_cases(test_casesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type b(bSEXP);
+    Rcpp::traits::input_parameter< const double >::type cov_sigma(cov_sigmaSEXP);
+    Rcpp::traits::input_parameter< const double >::type cov_ell(cov_ellSEXP);
+    Rcpp::traits::input_parameter< const double >::type obs_sigma(obs_sigmaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Ky(KySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Ky_i(Ky_iSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type beta_bar(beta_barSEXP);
+    rcpp_result_gen = Rcpp::wrap(predict(outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma, Ky, Ky_i, beta_bar));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gprd_predict", (DL_FUNC) &_gprd_predict, 8},
+    {"_gprd_gprd", (DL_FUNC) &_gprd_gprd, 8},
+    {"_gprd_predict", (DL_FUNC) &_gprd_predict, 11},
     {NULL, NULL, 0}
 };
 

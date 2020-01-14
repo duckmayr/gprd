@@ -50,6 +50,9 @@ plot.gprd <- function(x,
     if ( !is_gprd | !has_both_fs | !both_fs_are_gpr_objects ) {
         stop("x should be a gprd object returned from gprd().")
     }
+    if ( ci_width > 1 | ci_width < 0 ) {
+        stop("ci_width must be between 0 and 1.")
+    }
     ## Predict at new points
     if ( !is.null(from) & !is.null(to) ) {
         if ( is.null(n_points) ) {

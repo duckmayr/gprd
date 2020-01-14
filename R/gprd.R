@@ -85,6 +85,9 @@ gprd <- function(x, y, cutoff = 0, # data
     if ( length(x) != length(y) ) {
         stop("x and y should be of the same length.")
     }
+    if ( ci_width > 1 | ci_width < 0 ) {
+        stop("ci_width must be between 0 and 1.")
+    }
     ## Find which cases belong to treatment, control, or are missing
     omit_cases  <- which(is.na(x) | is.na(y))
     left_cases  <- which(x < cutoff)
@@ -105,7 +108,9 @@ gprd <- function(x, y, cutoff = 0, # data
     tau_sd   <- sqrt(f_r$predictive_var[1,1] + f_l$predictive_var[1,1])
     tau_low  <- qnorm(p = q_low,  mean = tau_mean, sd = tau_sd)
     tau_high <- qnorm(p = q_high, mean = tau_mean, sd = tau_sd)
-    res <- list(tau_mean = tau_mean, tau_ci = c(tau_low, tau_high),
+    tau_ci   <- c(tau_low, tau_high)
+    names(tau_ci) <- c(q_low, q_high)
+    res <- list(tau_mean = tau_mean, tau_ci = tau_ci,
                 cutoff = cutoff, f_l = f_l, f_r = f_r)
     class(res) <- c("gprd", class(res))
     return(res)

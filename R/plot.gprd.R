@@ -1,4 +1,4 @@
-#' Plot Gaussian Process Regression Discontinuity
+#' Plot Gaussian Process Regression for Regression Discontinuity
 #'
 #' @param x A object of class \code{\link{gprd}}
 #' @param from A numeric vector of length one giving the lowest x value
@@ -41,7 +41,7 @@ plot.gprd <- function(x,
                       data_color = "#1c1c1c1c",
                       line_color = "black",
                       ci_color = "#87878787",
-                      plot_cuttoff = TRUE,
+                      plot_cutoff = TRUE,
                       main_title = "", xlab = "", ylab = "", ...) {
     ## Sanity checks
     is_gprd <- inherits(x, "gprd")
@@ -134,7 +134,7 @@ plot.gprd <- function(x,
             border = NA, col = ci_color)
     lines(left_test, left_mean, col = line_color)
     lines(right_test, right_mean, col = line_color)
-    if ( plot_cuttoff ) {
+    if ( plot_cutoff ) {
         abline(v = x$cutoff, lty = 2)
     }
     return(invisible(NULL))

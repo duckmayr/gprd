@@ -2,7 +2,7 @@
 % Please edit documentation in R/gprd.R
 \name{gprd}
 \alias{gprd}
-\title{Gaussian Process Regression Discontinuity}
+\title{Gaussian Process Regression for Regression Discontinuity}
 \usage{
 gprd(x, y, cutoff = 0, b_l = c(0, 0), b_r = c(0, 0), B_l = diag(10,
   nrow = 2), B_r = diag(10, nrow = 2), output_sigma = 1,
@@ -73,14 +73,21 @@ elements:
                              having this available is useful for generating
                              other predictions}
     \item{hyperparameters}{The hyperparameters used for the GP regression,
-                           provided in a list of length five, giving the
-                           beta prior covariance, beta prior mean,
-                           scale factor for the GP, length scale for the GP,
-                           and outcome observation noise.}
+                           provided in a list of length five:
+                           \code{beta_prior_cov}, giving the
+                           beta prior covariance;
+                           \code{beta_prior_mean}, giving the beta prior
+                           mean;
+                           \code{scale_factor}, giving the scale factor for
+                           the GP prior;
+                           \code{length_scale}, giving the length scale for
+                           the GP prior;
+                           and \code{outcome_sigma}, giving the outcome
+                           observation noise (the likelihood hyper).}
 }
 }
 \description{
-Gaussian Process Regression Discontinuity
+Gaussian Process Regression for Regression Discontinuity
 }
 \seealso{
 plot.gprd

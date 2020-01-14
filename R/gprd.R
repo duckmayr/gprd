@@ -1,4 +1,4 @@
-#' Gaussian Process Regression Discontinuity
+#' Gaussian Process Regression for Regression Discontinuity
 #'
 #' @param x A numeric vector giving the observations of the explanatory variable
 #' @param y A numeric vector giving the observations of the outcome
@@ -53,10 +53,17 @@
 #'                              having this available is useful for generating
 #'                              other predictions}
 #'     \item{hyperparameters}{The hyperparameters used for the GP regression,
-#'                            provided in a list of length five, giving the
-#'                            beta prior covariance, beta prior mean,
-#'                            scale factor for the GP, length scale for the GP,
-#'                            and outcome observation noise.}
+#'                            provided in a list of length five:
+#'                            \code{beta_prior_cov}, giving the
+#'                            beta prior covariance;
+#'                            \code{beta_prior_mean}, giving the beta prior
+#'                            mean;
+#'                            \code{scale_factor}, giving the scale factor for
+#'                            the GP prior;
+#'                            \code{length_scale}, giving the length scale for
+#'                            the GP prior;
+#'                            and \code{outcome_sigma}, giving the outcome
+#'                            observation noise (the likelihood hyper).}
 #' }
 #'
 #' @importFrom stats qnorm

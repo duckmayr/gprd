@@ -2,12 +2,12 @@
 % Please edit documentation in R/plot.gprd.R
 \name{plot.gprd}
 \alias{plot.gprd}
-\title{Plot Gaussian Process Regression Discontinuity}
+\title{Plot Gaussian Process Regression for Regression Discontinuity}
 \usage{
 \method{plot}{gprd}(x, from = min(x$f_l$training_input),
   to = max(x$f_r$training_input), n_points = NULL, ci_width = 0.95,
   data_color = "#1c1c1c1c", line_color = "black",
-  ci_color = "#87878787", plot_cuttoff = TRUE, main_title = "",
+  ci_color = "#87878787", plot_cutoff = TRUE, main_title = "",
   xlab = "", ylab = "", ...)
 }
 \arguments{
@@ -34,6 +34,9 @@ the width of the confidence interval for tau}
 
 \item{ci_color}{A color to plot the CI polygon in}
 
+\item{plot_cutoff}{A logical vector of length one; if \code{TRUE}, a dashed
+vertical line (\code{lty = 2}) marks the cutoff; default is \code{TRUE}}
+
 \item{main_title}{A character vector of length one giving a main title for
 the plot}
 
@@ -42,15 +45,12 @@ the plot}
 \item{ylab}{A character vector of length one giving a title for the y axis}
 
 \item{...}{Other arguments passed to \code{\link[graphics]{plot}}}
-
-\item{plot_cutoff}{A logical vector of length one; if \code{TRUE}, a dashed
-vertical line (\code{lty = 2}) marks the cutoff; default is \code{TRUE}}
 }
 \value{
 Returns \code{NULL} invisibly
 }
 \description{
-Plot Gaussian Process Regression Discontinuity
+Plot Gaussian Process Regression for Regression Discontinuity
 }
 \seealso{
 gprd

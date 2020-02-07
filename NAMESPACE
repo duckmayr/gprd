@@ -3,6 +3,7 @@
 S3method(plot,gprd)
 S3method(summary,gprd)
 export(gprd)
+export(optimize_hyperparameters)
 importFrom(Rcpp,sourceCpp)
 importFrom(graphics,axis)
 importFrom(graphics,mtext)

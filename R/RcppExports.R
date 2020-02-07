@@ -5,6 +5,18 @@
     .Call(`_gprd_gprd`, outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma)
 }
 
+.squared_distance <- function(x) {
+    .Call(`_gprd_squared_distance`, x)
+}
+
+.gradient <- function(hypers, K0, Q0, M) {
+    .Call(`_gprd_gradient`, hypers, K0, Q0, M)
+}
+
+.log_marginal_likelihood <- function(hypers, K0, Q0, M) {
+    .Call(`_gprd_log_marginal_likelihood`, hypers, K0, Q0, M)
+}
+
 .gprd_predict <- function(outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma, Ky, Ky_i, beta_bar) {
     .Call(`_gprd_predict`, outcome, training_cases, test_cases, B, b, cov_sigma, cov_ell, obs_sigma, Ky, Ky_i, beta_bar)
 }

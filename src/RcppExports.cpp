@@ -24,6 +24,45 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// squared_distance
+arma::cube squared_distance(const arma::mat& x);
+RcppExport SEXP _gprd_squared_distance(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(squared_distance(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gradient
+arma::vec gradient(const arma::vec& hypers, const arma::cube& K0, const arma::mat& Q0, const arma::vec& M);
+RcppExport SEXP _gprd_gradient(SEXP hypersSEXP, SEXP K0SEXP, SEXP Q0SEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type hypers(hypersSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type K0(K0SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Q0(Q0SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(gradient(hypers, K0, Q0, M));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_marginal_likelihood
+double log_marginal_likelihood(const arma::vec& hypers, const arma::cube& K0, const arma::mat& Q0, const arma::vec& M);
+RcppExport SEXP _gprd_log_marginal_likelihood(SEXP hypersSEXP, SEXP K0SEXP, SEXP Q0SEXP, SEXP MSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type hypers(hypersSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type K0(K0SEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Q0(Q0SEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_marginal_likelihood(hypers, K0, Q0, M));
+    return rcpp_result_gen;
+END_RCPP
+}
 // predict
 Rcpp::List predict(const arma::vec& outcome, const arma::mat& training_cases, const arma::mat& test_cases, const arma::mat& B, const arma::vec& b, const double cov_sigma, const arma::vec& cov_ell, const double obs_sigma, const arma::mat& Ky, const arma::mat& Ky_i, const arma::vec& beta_bar);
 RcppExport SEXP _gprd_predict(SEXP outcomeSEXP, SEXP training_casesSEXP, SEXP test_casesSEXP, SEXP BSEXP, SEXP bSEXP, SEXP cov_sigmaSEXP, SEXP cov_ellSEXP, SEXP obs_sigmaSEXP, SEXP KySEXP, SEXP Ky_iSEXP, SEXP beta_barSEXP) {
@@ -48,6 +87,9 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gprd_gprd", (DL_FUNC) &_gprd_gprd, 8},
+    {"_gprd_squared_distance", (DL_FUNC) &_gprd_squared_distance, 1},
+    {"_gprd_gradient", (DL_FUNC) &_gprd_gradient, 4},
+    {"_gprd_log_marginal_likelihood", (DL_FUNC) &_gprd_log_marginal_likelihood, 4},
     {"_gprd_predict", (DL_FUNC) &_gprd_predict, 11},
     {NULL, NULL, 0}
 };

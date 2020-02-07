@@ -14,9 +14,8 @@
 summary.gprd <- function(x, digits = 3) {
     ## Sanity checks
     is_gprd <- inherits(x, "gprd")
-    has_both_fs <- all(c("f_r", "f_l") %in% names(x))
-    both_fs_are_gpr_objects <- all(sapply(x[c("f_r", "f_l")], inherits, "gpr"))
-    if ( !is_gprd | !has_both_fs | !both_fs_are_gpr_objects ) {
+    all_fs_are_gpr_objects <- all(sapply(x[["f"]], inherits, "gpr"))
+    if ( !is_gprd | !all_fs_are_gpr_objects ) {
         stop("x should be a gprd object returned from gprd().")
     }
     ## Prepare elements to print

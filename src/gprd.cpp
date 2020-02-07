@@ -2,24 +2,24 @@
 
 // [[Rcpp::export(.gprd)]]
 Rcpp::List gprd(const arma::vec& outcome,
-                const arma::vec& training_cases,
-                const arma::vec& test_cases,
+                const arma::mat& training_cases,
+                const arma::mat& test_cases,
                 const arma::mat& B, // beta prior covariance
                 const arma::vec& b, // beta prior mean
                 const double cov_sigma,
-                const double cov_ell,
+                const arma::vec& cov_ell,
                 const double obs_sigma) {
     // Bookkeeping variables
     arma::uword n = outcome.n_elem;
-    arma::uword m = test_cases.n_elem;
+    arma::uword m = test_cases.n_rows;
 
     // Covariance matrices
     arma::mat noise = obs_sigma * arma::eye(n, n);
-    arma::mat Ky    = covSEiso(training_cases, cov_sigma, cov_ell) + noise;
+    arma::mat Ky    = covSEard(training_cases, cov_sigma, cov_ell) + noise;
     arma::mat Ky_i  = Ky.i();
-    arma::mat Kstar = covSEiso(training_cases, test_cases, cov_sigma, cov_ell);
+    arma::mat Kstar = covSEard(training_cases, test_cases, cov_sigma, cov_ell);
     arma::mat Kstar_t   = Kstar.t();
-    arma::mat Kstarstar = covSEiso(test_cases, cov_sigma, cov_ell);
+    arma::mat Kstarstar = covSEard(test_cases, cov_sigma, cov_ell);
 
     // Add ones for intercept
     arma::mat H = arma::join_horiz(ones_vec(n), training_cases);

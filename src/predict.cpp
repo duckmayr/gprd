@@ -3,24 +3,25 @@
 // [[Rcpp::export(.gprd_predict)]]
 Rcpp::List predict(const arma::vec& outcome,
                    const arma::mat& training_cases,
-                   const arma::vec& test_cases,
+                   const arma::mat& test_cases,
                    const arma::mat& B, // beta prior covariance
                    const arma::vec& b, // beta prior mean
                    const double cov_sigma,
-                   const double cov_ell,
+                   const arma::vec& cov_ell,
                    const double obs_sigma,
                    const arma::mat& Ky,
                    const arma::mat& Ky_i,
                    const arma::vec& beta_bar) {
     // Bookkeeping variables
     arma::uword n = outcome.n_elem;
-    arma::uword m = test_cases.n_elem;
+    arma::uword m = test_cases.n_rows;
 
     // Covariance matrices
-    arma::mat Kstar = covSEiso(training_cases.col(1), test_cases, cov_sigma,
-                               cov_ell);
+    arma::mat covX  = training_cases;
+    covX.shed_col(0);
+    arma::mat Kstar = covSEard(covX, test_cases, cov_sigma, cov_ell);
     arma::mat Kstar_t   = Kstar.t();
-    arma::mat Kstarstar = covSEiso(test_cases, cov_sigma, cov_ell);
+    arma::mat Kstarstar = covSEard(test_cases, cov_sigma, cov_ell);
 
     // Add ones for intercept
     arma::mat H = training_cases;

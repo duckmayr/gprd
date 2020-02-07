@@ -4,9 +4,10 @@
 \alias{gprd}
 \title{Gaussian Process Regression for Regression Discontinuity}
 \usage{
-gprd(x, y, cutoff = 0, b_l = c(0, 0), b_r = c(0, 0), B_l = diag(10,
-  nrow = 2), B_r = diag(10, nrow = 2), output_sigma = 1,
-  cov_sigma = 1, cov_ell = 1, ci_width = 0.95)
+gprd(x, y, cutoff = 0, estimator = "local", hypers = list(list(b =
+  c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell = 1),
+  list(b = c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell =
+  1)), ci_width = 0.95)
 }
 \arguments{
 \item{x}{A numeric vector giving the observations of the explanatory variable}
@@ -16,29 +17,24 @@ gprd(x, y, cutoff = 0, b_l = c(0, 0), b_r = c(0, 0), B_l = diag(10,
 \item{cutoff}{A numeric vector of length one giving the discontinutiy cutoff;
 the default is 0.}
 
-\item{b_l}{A numeric vector of length two giving the prior means for the
-intercept and slope to the left of the cutoff}
+\item{estimator}{A character vector of length one giving the estimation
+strategy; should be one of "global" (one unknown function for all
+observations, with dummy variable added to indicate treatment) or
+"local" (different unknown functions for observations to the left of
+the cutoff and to the right). The default is "local".}
 
-\item{b_r}{A numeric vector of length two giving the prior means for the
-intercept and slope to the right of the cutoff}
-
-\item{B_l}{A numeric matrix with 2 rows and 2 columns giving the prior
-covariance for the intercept and slope to the left of the cutoff}
-
-\item{B_r}{A numeric matrix with 2 rows and 2 columns giving the prior
-covariance for the intercept and slope to the right of the cutoff}
-
-\item{output_sigma}{A numeric vector of length one; a hyperparameter for
-the observation noise}
-
-\item{cov_sigma}{A numeric vector of length one; a hyperparameter for the
-signal noise in the unobserved function}
-
-\item{cov_ell}{A numeric vector of length one; a hyperparameter for the
-characteristic length scale for the unobserved function}
+\item{hypers}{A list giving the hyperparameters of the model. If
+\code{estimator = "local"}, should be a list of length two, where each
+element is itself a list giving the hyperparameters for the functions to
+each side of the cutoff. The list(s) of hypers should have elements
+"b" (a numeric vector giving the coefficients' prior mean),
+"B" (a numeric matrix giving the coefficients' prior covariance),
+"sigma_y" (a numeric vector of length one giving the output variance),
+"sigma_f" (a numeric vector of length one giving the function variance),
+and "ell" (a numeric vector giving the length scale(s)).}
 
 \item{ci_width}{A numeric vector of length one between 0 and 1 giving
-the width of the confidence interval for tau}
+the width of the confidence interval for the treatment effect.}
 }
 \value{
 A list of length five with class \code{gprd} and elements
@@ -48,10 +44,17 @@ A list of length five with class \code{gprd} and elements
                       requested confidence interval (the names are the
                       confidence interval quantiles)}
         \item{cutoff}{A numeric vector of length one giving the cutoff}
-        \item{f_l}{An object of class \code{gpr} with information on
-                   the posterior over the function to the left of the cutoff}
-        \item{f_r}{An object of class \code{gpr} with information on
-                   the posterior over the function to the right of the cutoff}
+        \item{estimator}{A character vector of length one giving the
+                         estimation strategy}
+        \item{f}{A list where each element is an object of class \code{gpr}
+                 with information on the posterior over the relevant
+                 function; if \code{estimator = "global"}, the list will be
+                 of length one, giving the posterior over the global mapping
+                 from \code{x} to \code{y}, while if
+                 \code{estimator = "local"}, the list will be of length two
+                 with elements \code{f_l} (giving the posterior over the
+                 function to the left of the cutoff) and \code{f_r} (giving
+                 the posterior over the function to the right of the cutoff)}
     }
 
     An object of class \code{gpr} is a list of length eight with the following
@@ -78,12 +81,12 @@ elements:
                            beta prior covariance;
                            \code{beta_prior_mean}, giving the beta prior
                            mean;
-                           \code{scale_factor}, giving the scale factor for
-                           the GP prior;
-                           \code{length_scale}, giving the length scale for
-                           the GP prior;
-                           and \code{outcome_sigma}, giving the outcome
-                           observation noise (the likelihood hyper).}
+                           \code{sigma_f}, giving the scale factor for the
+                           GP prior;
+                           \code{ell}, giving the length scale for the GP
+                           prior;
+                           and \code{sigma_y}, giving the outcome observation
+                           noise (the likelihood hyper).}
 }
 }
 \description{

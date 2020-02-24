@@ -5,7 +5,7 @@
 #' @param cutoff A numeric vector of length one; the treatment cutoff
 #'     (default is 0)
 #' @param estimator A character vector of length one; should be one of "global"
-#'     or "local". The default is "global".
+#'     or "piecewise". The default is "global".
 #' @param b A numeric vector giving the prior mean for the coefficients for the
 #'     mean function. If \code{NULL} (the default), all coefficients have a
 #'     prior mean of 0.
@@ -20,10 +20,11 @@
 #' @param ... Other arguments passed to \code{\link[stats]{optim}}
 #'
 #' @importFrom stats qnorm
+#' @importFrom stats optim
 #' @seealso gprd
 #'
 #' @export
-optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "local",
+optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "piecewise",
                                      b = NULL, B = NULL, method = "CG",
                                      control = list(type = 2), ...) {
     if ( length(x) != length(y) ) {
@@ -34,12 +35,21 @@ optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "local",
         x <- x[-idx]
         y <- y[-idx]
     }
+    ## We used to call the piecewise estimator the local estimator.
+    ## For now, I'll fix it if someone's code calls it the local estimator.
+    if ( estimator == "local" ) {
+        estimator <- "piecewise"
+        warning("Note the previously named 'local' estimator is now called ",
+                "the 'piecewise' estimator. Using the 'local' terminology ",
+                "is deprecated and will soon result in an error. ",
+                "Correcting to 'piecewise' estimator.")
+    }
     if ( estimator == "global" ) {
         x <- cbind(x, x > cutoff)
-    } else if ( estimator == "local" ) {
+    } else if ( estimator == "piecewise" ) {
         x <- matrix(x)
     } else {
-        stop("estimator should be one of global or local.")
+        stop("estimator should be one of global or piecewise.")
     }
     if ( is.null(b) ) {
         b <- rep(0, ncol(x) + 1)
@@ -52,7 +62,7 @@ optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "local",
     hypers <- c(1, 1, rep(1, ncol(x)))
     X  <- cbind(1, x)
     ## Note slight difference in K0 to doc (no ell^2 division)
-    if ( estimator == "local" ) {
+    if ( estimator == "piecewise" ) {
         res <- vector("list", 2)
         left_cases <- which(x[,1] < cutoff)
         xtmp <- x[left_cases, , drop = FALSE]

@@ -4,10 +4,21 @@
 \alias{plot.gprd}
 \title{Plot Gaussian Process Regression for Regression Discontinuity}
 \usage{
-\method{plot}{gprd}(x, from = NULL, to = NULL, n_points = NULL,
-  ci_width = 0.95, data_color = "#1c1c1c1c", line_color = "black",
-  ci_color = "#87878787", plot_cutoff = TRUE, main_title = "",
-  xlab = "", ylab = "", ...)
+\method{plot}{gprd}(
+  x,
+  from = min(x$f_l$training_input),
+  to = max(x$f_r$training_input),
+  n_points = NULL,
+  ci_width = 0.95,
+  data_color = "#1c1c1c1c",
+  line_color = "black",
+  ci_color = "#87878787",
+  plot_cutoff = TRUE,
+  main_title = "",
+  xlab = "",
+  ylab = "",
+  ...
+)
 }
 \arguments{
 \item{x}{A object of class \code{\link{gprd}}}

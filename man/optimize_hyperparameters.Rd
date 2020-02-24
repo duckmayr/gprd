@@ -4,8 +4,17 @@
 \alias{optimize_hyperparameters}
 \title{Optimize hyperparameters for GPRD}
 \usage{
-optimize_hyperparameters(x, y, cutoff = 0, estimator = "local",
-  b = NULL, B = NULL, method = "CG", control = list(type = 2), ...)
+optimize_hyperparameters(
+  x,
+  y,
+  cutoff = 0,
+  estimator = "piecewise",
+  b = NULL,
+  B = NULL,
+  method = "CG",
+  control = list(type = 2),
+  ...
+)
 }
 \arguments{
 \item{x}{A numeric vector; the forcing variable}
@@ -16,7 +25,7 @@ optimize_hyperparameters(x, y, cutoff = 0, estimator = "local",
 (default is 0)}
 
 \item{estimator}{A character vector of length one; should be one of "global"
-or "local". The default is "global".}
+or "piecewise". The default is "global".}
 
 \item{b}{A numeric vector giving the prior mean for the coefficients for the
 mean function. If \code{NULL} (the default), all coefficients have a

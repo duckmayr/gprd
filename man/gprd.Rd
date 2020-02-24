@@ -4,10 +4,15 @@
 \alias{gprd}
 \title{Gaussian Process Regression for Regression Discontinuity}
 \usage{
-gprd(x, y, cutoff = 0, estimator = "local", hypers = list(list(b =
-  c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell = 1),
-  list(b = c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell =
-  1)), ci_width = 0.95)
+gprd(
+  x,
+  y,
+  cutoff = 0,
+  estimator = "piecewise",
+  hypers = list(list(b = c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell
+    = 1), list(b = c(0, 0), B = diag(10, nrow = 2), sigma_y = 1, sigma_f = 1, ell = 1)),
+  ci_width = 0.95
+)
 }
 \arguments{
 \item{x}{A numeric vector giving the observations of the explanatory variable}
@@ -20,11 +25,11 @@ the default is 0.}
 \item{estimator}{A character vector of length one giving the estimation
 strategy; should be one of "global" (one unknown function for all
 observations, with dummy variable added to indicate treatment) or
-"local" (different unknown functions for observations to the left of
-the cutoff and to the right). The default is "local".}
+"piecewise" (different unknown functions for observations to the left of
+the cutoff and to the right). The default is "piecewise".}
 
 \item{hypers}{A list giving the hyperparameters of the model. If
-\code{estimator = "local"}, should be a list of length two, where each
+\code{estimator = "piecewise"}, should be a list of length two, where each
 element is itself a list giving the hyperparameters for the functions to
 each side of the cutoff. The list(s) of hypers should have elements
 "b" (a numeric vector giving the coefficients' prior mean),
@@ -51,7 +56,7 @@ A list of length five with class \code{gprd} and elements
                  function; if \code{estimator = "global"}, the list will be
                  of length one, giving the posterior over the global mapping
                  from \code{x} to \code{y}, while if
-                 \code{estimator = "local"}, the list will be of length two
+                 \code{estimator = "piecewise"}, the list will be of length two
                  with elements \code{f_l} (giving the posterior over the
                  function to the left of the cutoff) and \code{f_r} (giving
                  the posterior over the function to the right of the cutoff)}

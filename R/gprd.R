@@ -7,10 +7,10 @@
 #' @param estimator A character vector of length one giving the estimation
 #'     strategy; should be one of "global" (one unknown function for all
 #'     observations, with dummy variable added to indicate treatment) or
-#'     "local" (different unknown functions for observations to the left of
-#'     the cutoff and to the right). The default is "local".
+#'     "piecewise" (different unknown functions for observations to the left of
+#'     the cutoff and to the right). The default is "piecewise".
 #' @param hypers A list giving the hyperparameters of the model. If
-#'     \code{estimator = "local"}, should be a list of length two, where each
+#'     \code{estimator = "piecewise"}, should be a list of length two, where each
 #'     element is itself a list giving the hyperparameters for the functions to
 #'     each side of the cutoff. The list(s) of hypers should have elements
 #'     "b" (a numeric vector giving the coefficients' prior mean),
@@ -35,7 +35,7 @@
 #'                  function; if \code{estimator = "global"}, the list will be
 #'                  of length one, giving the posterior over the global mapping
 #'                  from \code{x} to \code{y}, while if
-#'                  \code{estimator = "local"}, the list will be of length two
+#'                  \code{estimator = "piecewise"}, the list will be of length two
 #'                  with elements \code{f_l} (giving the posterior over the
 #'                  function to the left of the cutoff) and \code{f_r} (giving
 #'                  the posterior over the function to the right of the cutoff)}
@@ -77,7 +77,7 @@
 #' @seealso plot.gprd
 #'
 #' @export
-gprd <- function(x, y, cutoff = 0, estimator = "local",
+gprd <- function(x, y, cutoff = 0, estimator = "piecewise",
                  hypers = list(list(b = c(0, 0), B = diag(10, nrow = 2),
                                     sigma_y = 1, sigma_f = 1, ell = 1),
                                list(b = c(0, 0), B = diag(10, nrow = 2),
@@ -100,8 +100,17 @@ gprd <- function(x, y, cutoff = 0, estimator = "local",
     omit_cases  <- which(is.na(x) | is.na(y))
     left_cases  <- which(x < cutoff)
     right_cases <- which(x > cutoff)
-    ## Farm out to C++ functions for computation
+    ## We used to call the piecewise estimator the local estimator.
+    ## For now, I'll fix it if someone's code calls it the local estimator.
     if ( estimator == "local" ) {
+        estimator <- "piecewise"
+        warning("Note the previously named 'local' estimator is now called ",
+                "the 'piecewise' estimator. Using the 'local' terminology ",
+                "is deprecated and will soon result in an error. ",
+                "Correcting to 'piecewise' estimator.")
+    }
+    ## Farm out to C++ functions for computation
+    if ( estimator == "piecewise" ) {
         f_l  <- .gprd(y[setdiff(left_cases, omit_cases)],
                       matrix(x[setdiff(left_cases, omit_cases)]),
                       matrix(cutoff), # only need to predict at the cutoff
@@ -133,12 +142,12 @@ gprd <- function(x, y, cutoff = 0, estimator = "local",
                        hypers[["sigma_y"]])
         f_res <- list(f)
     } else {
-        stop("estimator should be one of global or local.")
+        stop("estimator should be one of global or piecewise.")
     }
     ## Then get the estimate and the CI
     q_high   <- 1 - ((1 - ci_width) / 2)
     q_low    <- 1 - q_high
-    if ( estimator == "local" ) {
+    if ( estimator == "piecewise" ) {
         tau_mean <- f_r$predictive_mean[1,1] - f_l$predictive_mean[1,1]
         tau_sd   <- sqrt(f_r$predictive_var[1,1] + f_l$predictive_var[1,1])
     } else {

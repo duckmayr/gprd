@@ -4,13 +4,15 @@
 \alias{summary.gprd}
 \title{Summary of gprd objects}
 \usage{
-\method{summary}{gprd}(x, digits = 3)
+\method{summary}{gprd}(object, digits = 3, ...)
 }
 \arguments{
-\item{x}{A object of class \code{\link{gprd}}}
+\item{object}{A object of class \code{\link{gprd}}}
 
 \item{digits}{An integer vector of length one giving the number of digits
 to print; default is 3}
+
+\item{...}{Additional arguments (currently unused)}
 }
 \value{
 Returns \code{NULL} invisibly

@@ -1,12 +1,16 @@
 #' Plot Gaussian Process Regression for Regression Discontinuity
 #'
 #' @param x A object of class \code{\link{gprd}}
-#' @param from A numeric vector of length one giving the lowest x value
-#'     to plot prediction for; if \code{NULL}, only values in the training
-#'     data and at the cutoff are plotted
-#' @param to A numeric vector of length one giving the highest x value
-#'     to plot prediction for; if \code{NULL}, only values in the training
-#'     data and at the cutoff are plotted
+#' @param from The lowest x value to plot prediction for.
+#'     The default, "data_min", uses the lowest forcing variable observed value.
+#'     If both \code{from} and \code{to} are \code{NULL}, only values in the
+#'     training data and at the cutoff are plotted.
+#'     Otherwise a numeric vector of length one should be given.
+#' @param to The highest x value to plot prediction for.
+#'     The default "data_max" uses the largest forcing variable observed value.
+#'     If both \code{from} and \code{to} are \code{NULL}, only values in the
+#'     training data and at the cutoff are plotted.
+#'     Otherwise a numeric vector of length one should be given.
 #' @param n_points An integer vector of length one giving the number of
 #'     prediction points to plot; if \code{NULL} and \code{from} and \code{to}
 #'     are given, \code{n_points = length(seq(from = from, to = to, by = 0.01))}
@@ -39,14 +43,18 @@
 #'
 #' @export
 plot.gprd <- function(x,
-                      from = min(sapply(x[["f"]], "[[", "training_input")),
-                      to = max(sapply(x[["f"]], "[[", "training_input")), # data
-                      n_points = NULL, ci_width = 0.95,
+                      from = "data_min",
+                      to = "data_max",
+                      n_points = NULL,
+                      ci_width = 0.95,
                       data_color = "#1c1c1c1c",
                       line_color = "black",
                       ci_color = "#87878787",
                       plot_cutoff = TRUE,
-                      main_title = "", xlab = "", ylab = "", ...) {
+                      main_title = "",
+                      xlab = "",
+                      ylab = "",
+                      ...) {
     ## Sanity checks
     is_gprd <- inherits(x, "gprd")
     all_fs_are_gpr_objects <- all(sapply(x[["f"]], inherits, "gpr"))
@@ -55,6 +63,16 @@ plot.gprd <- function(x,
     }
     if ( ci_width > 1 | ci_width < 0 ) {
         stop("ci_width must be between 0 and 1.")
+    }
+    if ( from == "data_min" ) {
+        from <- min(unlist(sapply(x[["f"]], "[[", "training_input")))
+    } else if ( !is.null(from) & !is.numeric(from) ) {
+        stop("from should be NULL, a numeric value, or \"data_min\".")
+    }
+    if ( to == "data_max" ) {
+        to <- max(unlist(sapply(x[["f"]], "[[", "training_input")))
+    } else if ( !is.null(to) & !is.numeric(to) ) {
+        stop("to should be NULL, a numeric value, or \"data_max\".")
     }
     ## Predict at new points (or training points if from & to are NULL)
     if ( !is.null(from) & !is.null(to) ) {
@@ -161,8 +179,7 @@ plot.gprd <- function(x,
     margins <- "if"(main_title == "", c(3, 3, 1, 1), c(3, 3, 3, 1)) + 0.1
     opar <- par(mar = margins)
     on.exit(par(opar))
-    lim <- range(c(left_low, right_low, left_high, right_high,
-                   x$f_l$training_outcomes, x$f_r$training_outcomes),
+    lim <- range(c(left_low, right_low, left_high, right_high, output),
                  na.rm = TRUE)
     plot(x = c(left_test, right_test), y = c(left_mean, right_mean),
          ylim = lim, type = "n", ...,

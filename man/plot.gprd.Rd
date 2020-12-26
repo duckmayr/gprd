@@ -6,8 +6,8 @@
 \usage{
 \method{plot}{gprd}(
   x,
-  from = min(x$f_l$training_input),
-  to = max(x$f_r$training_input),
+  from = "data_min",
+  to = "data_max",
   n_points = NULL,
   ci_width = 0.95,
   data_color = "#1c1c1c1c",
@@ -23,13 +23,17 @@
 \arguments{
 \item{x}{A object of class \code{\link{gprd}}}
 
-\item{from}{A numeric vector of length one giving the lowest x value
-to plot prediction for; if \code{NULL}, only values in the training
-data and at the cutoff are plotted}
+\item{from}{The lowest x value to plot prediction for.
+The default, "data_min", uses the lowest forcing variable observed value.
+If both \code{from} and \code{to} are \code{NULL}, only values in the
+training data and at the cutoff are plotted.
+Otherwise a numeric vector of length one should be given.}
 
-\item{to}{A numeric vector of length one giving the highest x value
-to plot prediction for; if \code{NULL}, only values in the training
-data and at the cutoff are plotted}
+\item{to}{The highest x value to plot prediction for.
+The default "data_max" uses the largest forcing variable observed value.
+If both \code{from} and \code{to} are \code{NULL}, only values in the
+training data and at the cutoff are plotted.
+Otherwise a numeric vector of length one should be given.}
 
 \item{n_points}{An integer vector of length one giving the number of
 prediction points to plot; if \code{NULL} and \code{from} and \code{to}

@@ -11,8 +11,9 @@ optimize_hyperparameters(
   estimator = "piecewise",
   b = NULL,
   B = NULL,
-  method = "CG",
+  method = "L-BFGS-B",
   control = list(type = 2),
+  lower = 0.1,
   ...
 )
 }
@@ -37,10 +38,13 @@ covariance for the coefficients is a diagonal matrix, with the diagonal
 elements set equal to 10.}
 
 \item{method}{A character vector of length one giving the optimization
-routine to use; default is "CG", the conjugate gradient method.
+routine to use; default is "L-BFGS-B", a box-constrained method.
 See \code{\link[stats]{optim}} for other options.}
 
 \item{control}{A list of control parameters for optim}
+
+\item{lower}{A numeric vector of length one giving the lower bound for the
+parameters. The default is 0.1.}
 
 \item{...}{Other arguments passed to \code{\link[stats]{optim}}}
 }

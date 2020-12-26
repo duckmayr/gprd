@@ -14,8 +14,10 @@
 #'     covariance for the coefficients is a diagonal matrix, with the diagonal
 #'     elements set equal to 10.
 #' @param method A character vector of length one giving the optimization
-#'     routine to use; default is "CG", the conjugate gradient method.
+#'     routine to use; default is "L-BFGS-B", a box-constrained method.
 #'     See \code{\link[stats]{optim}} for other options.
+#' @param lower A numeric vector of length one giving the lower bound for the
+#'     parameters. The default is 0.1.
 #' @param control A list of control parameters for optim
 #' @param ... Other arguments passed to \code{\link[stats]{optim}}
 #'
@@ -25,8 +27,9 @@
 #'
 #' @export
 optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "piecewise",
-                                     b = NULL, B = NULL, method = "CG",
-                                     control = list(type = 2), ...) {
+                                     b = NULL, B = NULL, method = "L-BFGS-B",
+                                     control = list(type = 2), lower = 0.1,
+                                     ...) {
     if ( length(x) != length(y) ) {
         stop("x and y have a different number of observations.")
     }
@@ -71,7 +74,8 @@ optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "piecewise",
         Q0 <- Xtmp %*% B %*% t(Xtmp)
         M  <- Xtmp %*% b - y[left_cases]
         o  <- optim(hypers, .log_marginal_likelihood, .gradient, K0 = K0,
-                    Q0 = Q0, M = M, method = method, control = con, ...)
+                    Q0 = Q0, M = M, method = method, control = con,
+                    lower = lower, ...)
         params <- o$par
         res[[1]] <- list(b = b, B = B, sigma_y = params[1], sigma_f = params[2],
                          ell = params[3:length(params)])
@@ -82,7 +86,8 @@ optimize_hyperparameters <- function(x, y, cutoff = 0, estimator = "piecewise",
         Q0 <- Xtmp %*% B %*% t(Xtmp)
         M  <- Xtmp %*% b - y[right_cases]
         o  <- optim(hypers, .log_marginal_likelihood, .gradient, K0 = K0,
-                    Q0 = Q0, M = M, method = method, control = con, ...)
+                    Q0 = Q0, M = M, method = method, control = con,
+                    lower = lower, ...)
         params <- o$par
         res[[2]] <- list(b = b, B = B, sigma_y = params[1], sigma_f = params[2],
                          ell = params[3:length(params)])
